@@ -35,6 +35,7 @@ void cmd_init(void) {
 }
 
 // Usage: pes add <file>...
+// Usage: pes add <file>...
 void cmd_add(int argc, char *argv[]) {
     if (argc < 3) {
         fprintf(stderr, "Usage: pes add <file>...\n");
@@ -52,6 +53,14 @@ void cmd_add(int argc, char *argv[]) {
             fprintf(stderr, "error: failed to add '%s'\n", argv[i]);
         }
     }
+
+    // 🔥 THIS WAS MISSING
+    if (index_save(&index) != 0) {
+        fprintf(stderr, "error: failed to save index\n");
+        return;
+    }
+
+    printf("Added file(s) successfully\n");
 }
 
 // Usage: pes status
