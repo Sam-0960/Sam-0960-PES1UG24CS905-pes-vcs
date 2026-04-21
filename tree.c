@@ -8,8 +8,9 @@
 //
 // Example single entry (conceptual):
 //   "100644 hello.txt\0" followed by 32 raw bytes of SHA-256
-
+#include "pes.h"
 #include "tree.h"
+#include "index.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -130,8 +131,35 @@ int tree_serialize(const Tree *tree, void **data_out, size_t *len_out) {
 //
 // Returns 0 on success, -1 on error.
 int tree_from_index(ObjectID *id_out) {
-    // TODO: Implement recursive tree building
-    // (See Lab Appendix for logical steps)
-    (void)id_out;
-    return -1;
+    Index index;
+
+    if (index_load(&index) < 0) return -1;
+
+    Tree tree;
+    tree.count = 0;
+
+    for (int i = 0; i < index.count; i++) {
+        IndexEntry *e = &index.entries[i];
+
+        TreeEntry *te = &tree.entries[tree.count++];
+
+        te->mode = e->mode;
+
+        // Copy hash correctly
+        memcpy(te->hash.hash, e->hash.hash, HASH_SIZE);
+
+        // Copy name
+        strncpy(te->name, e->path, sizeof(te->name) - 1);
+        te->name[sizeof(te->name) - 1] = '\0';
+    }
+
+    void *buf;
+    size_t len;
+
+    if (tree_serialize(&tree, &buf, &len) < 0) return -1;
+
+    if (object_write(OBJ_TREE, buf, len, id_out) < 0) return -1;
+
+    free(buf);
+    return 0;
 }
