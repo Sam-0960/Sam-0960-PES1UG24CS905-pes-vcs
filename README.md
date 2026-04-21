@@ -1,3 +1,35 @@
+#screenshots
+PES1UG24CS905
+SAMARTH PRABHU K
+CSE – D
+
+1A.
+ <img width="940" height="189" alt="image" src="https://github.com/user-attachments/assets/c3d3e3c4-38c6-4595-a005-44c1802c3e99" />
+
+1.B
+ <img width="940" height="98" alt="image" src="https://github.com/user-attachments/assets/1a545ac1-c755-4514-8024-266ff1b05622" />
+
+2.A
+ <img width="940" height="98" alt="image" src="https://github.com/user-attachments/assets/89d19edf-5e0b-4aff-a4b9-a7710442535b" />
+
+2.B
+ <img width="940" height="48" alt="image" src="https://github.com/user-attachments/assets/b7e4b650-307c-4559-9647-d9ed06eacf4b" />
+
+ <img width="940" height="78" alt="image" src="https://github.com/user-attachments/assets/e2dc48e6-8dc4-4f32-bf0f-4927a3c48b43" />
+
+3.A
+ <img width="613" height="471" alt="image" src="https://github.com/user-attachments/assets/b2e6dfc1-9573-49bb-a228-3174b9bbfca2" />
+3.B
+ <img width="940" height="45" alt="image" src="https://github.com/user-attachments/assets/25af5134-98d9-4855-996c-89443cecc3a8" />
+4.A
+  <img width="940" height="403" alt="image" src="https://github.com/user-attachments/assets/f774a624-d495-4856-b4bc-c119bd21ac24" />
+  <img width="940" height="410" alt="image" src="https://github.com/user-attachments/assets/c4dc6236-7d88-42ab-b751-d309d99a9a92" />
+
+4.B
+   <img width="940" height="269" alt="image" src="https://github.com/user-attachments/assets/1ced3e84-32a4-4d88-ab27-3a29d1cb466c" />
+
+4.C 
+<img width="940" height="90" alt="image" src="https://github.com/user-attachments/assets/63b4b00e-6fd8-4619-8d81-d13fbe1e4dc9" />
 # Building PES-VCS — A Version Control System from Scratch
 
 **Objective:** Build a local version control system that tracks file changes, stores snapshots efficiently, and supports commit history. Every component maps directly to operating system and filesystem concepts.
@@ -600,3 +632,5 @@ The following questions cover filesystem concepts beyond the implementation scop
 - **Git Internals** (Pro Git book): https://git-scm.com/book/en/v2/Git-Internals-Plumbing-and-Porcelain
 - **Git from the inside out**: https://codewords.recurse.com/issues/two/git-from-the-inside-out
 - **The Git Parable**: https://tom.preston-werner.com/2009/05/19/the-git-parable.html
+
+
