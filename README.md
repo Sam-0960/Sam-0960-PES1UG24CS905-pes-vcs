@@ -1,3 +1,141 @@
+#answers
+
+Phase 5 & 6 — Analysis Answers
+________________________________________
+Q5.1 — How would you implement pes checkout <branch>?
+A branch is just a file in .pes/refs/heads/<branch> containing a commit hash.
+What files must change
+1.	.pes/HEAD
+o	Update to:
+o	ref: refs/heads/<branch>
+2.	.pes/refs/heads/<branch>
+o	Already exists (points to commit)
+What must happen to working directory
+1.	Read target commit hash from branch file
+2.	Load commit → get tree hash
+3.	Traverse tree:
+o	Recreate files in working directory
+o	Overwrite existing tracked files
+4.	Remove files that exist in current branch but not in target branch
+5.	Update .pes/index to match new tree
+Why this is complex
+Because you are syncing three states:
+working directory ↔ index ↔ object store (tree)
+Also:
+•	Must avoid overwriting user changes
+•	Must correctly delete extra files
+•	Must reconstruct directory structure recursively
+________________________________________
+Q5.2 — Detecting dirty working directory conflict
+Goal
+Prevent checkout if:
+working file ≠ index version AND branch version ≠ index version
+How to detect
+For each tracked file:
+1.	From index → get stored hash
+2.	From working directory → recompute hash
+3.	Compare:
+o	If different → file is modified
+Then:
+4. Load target branch tree → get file hash
+5. Compare:
+•	If working file ≠ index AND target ≠ index → conflict
+Condition for refusal
+modified_in_working_dir AND different_in_target_branch → abort checkout
+________________________________________
+Q5.3 — Detached HEAD behavior
+What it means
+.pes/HEAD contains:
+<commit-hash>
+instead of:
+ref: refs/heads/main
+What happens when committing
+•	New commits are created
+•	But no branch points to them
+•	They become unreachable from any branch
+Risk
+Commits can be lost (garbage collected later)
+Recovery methods
+1.	Create branch at that commit:
+2.	pes branch new-branch
+3.	Use commit hash manually:
+4.	pes checkout <hash>
+5.	(In real Git: reflog helps)
+________________________________________
+Q6.1 — Garbage collection algorithm
+Goal
+Delete objects not reachable from any branch
+Algorithm
+1.	Initialize:
+2.	reachable = empty set
+3.	Start from all branch heads:
+o	.pes/refs/heads/*
+4.	For each commit:
+o	Mark commit hash
+o	Traverse:
+	parent commit
+	tree
+5.	For each tree:
+o	Mark tree hash
+o	Traverse:
+	blobs
+	subtrees
+6.	After traversal:
+o	All visited = reachable
+7.	Scan .pes/objects/
+o	If object NOT in reachable → delete
+________________________________________
+Data structure
+Hash set (O(1) lookup)
+________________________________________
+Scale estimation
+Given:
+•	100,000 commits
+•	50 branches
+Worst case:
+Visit ≈ 100,000 commits
++ trees (≈ same order)
++ blobs (depends, but large)
+
+~200,000 – 500,000 objects
+________________________________________
+Q6.2 — Why GC + commit is dangerous
+Race condition scenario
+1.	Commit process:
+o	creates tree
+o	creates commit object
+o	(NOT yet updated HEAD)
+2.	GC runs simultaneously:
+o	scans reachable objects from HEAD
+o	new commit is NOT reachable yet
+3.	GC deletes:
+newly created objects (tree/commit)
+4.	Commit finishes:
+o	updates HEAD → points to deleted object 
+________________________________________
+Result
+Repository corruption
+________________________________________
+How real Git avoids this
+Techniques used
+1.	Object immutability
+o	objects never modified
+2.	Reference-based protection
+o	GC only deletes objects not referenced by:
+	branches
+	tags
+	reflog
+3.	Reflog safety
+o	keeps history of HEAD changes
+o	prevents recent commits from deletion
+4.	Locking / atomic updates
+o	commit updates HEAD atomically
+o	GC respects locks
+5.	Grace period
+Objects are not deleted immediately
+________________________________________
+
+
 #screenshots
 PES1UG24CS905
 SAMARTH PRABHU K
